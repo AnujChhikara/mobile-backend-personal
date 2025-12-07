@@ -196,3 +196,4 @@ logging.basicConfig(
 - System cron is independent of the server and runs even if the server is down
 - Choose the method that best fits your deployment strategy
 - For Docker deployments, the built-in scheduler is usually easier to manage
+

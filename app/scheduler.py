@@ -2,12 +2,15 @@
 Scheduler module for running periodic tasks.
 Uses APScheduler to manage cron jobs and scheduled tasks.
 """
+
+import logging
+from datetime import datetime
+
+import httpx
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
-from datetime import datetime
-import logging
-import httpx
+
 from app.database import get_expo_tokens_collection
 
 logger = logging.getLogger(__name__)
@@ -24,11 +27,11 @@ async def daily_cleanup_task():
     try:
         logger.info("🧹 Starting daily cleanup task...")
         collection = get_expo_tokens_collection()
-        
+
         # Example: Count total tokens
         total_count = await collection.count_documents({})
         logger.info(f"📊 Total registered tokens: {total_count}")
-        
+
         # Example: Find tokens older than 90 days (optional cleanup)
         # from datetime import timedelta
         # cutoff_date = datetime.utcnow() - timedelta(days=90)
@@ -36,7 +39,7 @@ async def daily_cleanup_task():
         #     "created_at": {"$lt": cutoff_date}
         # })
         # logger.info(f"🗑️ Found {old_tokens} tokens older than 90 days")
-        
+
         logger.info("✅ Daily cleanup task completed")
     except Exception as e:
         logger.error(f"❌ Error in daily cleanup task: {e}")
@@ -50,11 +53,11 @@ async def daily_notification_task():
     try:
         logger.info("📬 Starting daily notification task...")
         collection = get_expo_tokens_collection()
-        
+
         # Get all active tokens
         tokens = await collection.find({}).to_list(length=None)
         token_count = len(tokens)
-        
+
         if token_count > 0:
             logger.info(f"📱 Found {token_count} registered tokens")
             # Here you could send a daily notification
@@ -78,21 +81,21 @@ async def weekly_report_task():
     try:
         logger.info("📊 Starting weekly report task...")
         collection = get_expo_tokens_collection()
-        
+
         # Get statistics
         total_users = await collection.count_documents({})
-        
+
         # Get unique device types
         pipeline = [
             {"$group": {"_id": "$device_type", "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}}
+            {"$sort": {"count": -1}},
         ]
         device_stats = await collection.aggregate(pipeline).to_list(length=None)
-        
-        logger.info(f"📈 Weekly Report:")
+
+        logger.info("📈 Weekly Report:")
         logger.info(f"   Total Users: {total_users}")
         logger.info(f"   Device Types: {device_stats}")
-        
+
         logger.info("✅ Weekly report task completed")
     except Exception as e:
         logger.error(f"❌ Error in weekly report task: {e}")
@@ -106,23 +109,23 @@ async def test_notification_task():
     try:
         logger.info("🧪 [TEST] Starting test notification task (every 20 seconds)...")
         collection = get_expo_tokens_collection()
-        
+
         # Get all tokens
         tokens = []
         async for token_doc in collection.find():
             tokens.append(token_doc)
-        
+
         if not tokens:
             logger.info("ℹ️ [TEST] No tokens found - skipping notification")
             return
-        
+
         logger.info(f"📱 [TEST] Sending test notification to {len(tokens)} user(s)...")
-        
+
         # Send notification to each token
         EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send"
         sent = 0
         failed = 0
-        
+
         for token_doc in tokens:
             try:
                 message = {
@@ -130,9 +133,9 @@ async def test_notification_task():
                     "sound": "default",
                     "title": "🧪 Test Notification",
                     "body": f"Test notification sent at {datetime.now().strftime('%H:%M:%S')}",
-                    "data": {"type": "test", "timestamp": datetime.now().isoformat()}
+                    "data": {"type": "test", "timestamp": datetime.now().isoformat()},
                 }
-                
+
                 async with httpx.AsyncClient() as client:
                     response = await client.post(
                         EXPO_PUSH_URL,
@@ -140,24 +143,26 @@ async def test_notification_task():
                         headers={
                             "Accept": "application/json",
                             "Content-Type": "application/json",
-                        }
+                        },
                     )
                     result = response.json()
-                    
+
                     if "data" in result and result["data"].get("status") == "ok":
                         logger.info(f"✅ [TEST] Sent to user: {token_doc['user_id']}")
                         sent += 1
                     else:
                         error_msg = result.get("data", {}).get("message", "Unknown error")
-                        logger.warning(f"⚠️ [TEST] Failed for user {token_doc['user_id']}: {error_msg}")
+                        logger.warning(
+                            f"⚠️ [TEST] Failed for user {token_doc['user_id']}: {error_msg}"
+                        )
                         failed += 1
-                        
+
             except Exception as e:
                 logger.error(f"❌ [TEST] Error sending to user {token_doc['user_id']}: {e}")
                 failed += 1
-        
+
         logger.info(f"✅ [TEST] Test notification task completed - Sent: {sent}, Failed: {failed}")
-        
+
     except Exception as e:
         logger.error(f"❌ [TEST] Error in test notification task: {e}")
 
@@ -174,7 +179,7 @@ def setup_scheduler():
         name="Test Notification (Every 20 seconds)",
         replace_existing=True,
     )
-    
+
     # Daily cleanup at 2:00 AM
     scheduler.add_job(
         daily_cleanup_task,
@@ -183,7 +188,7 @@ def setup_scheduler():
         name="Daily Cleanup Task",
         replace_existing=True,
     )
-    
+
     # Daily notification at 9:00 AM
     scheduler.add_job(
         daily_notification_task,
@@ -192,7 +197,7 @@ def setup_scheduler():
         name="Daily Notification Task",
         replace_existing=True,
     )
-    
+
     # Weekly report every Monday at 8:00 AM
     scheduler.add_job(
         weekly_report_task,
@@ -201,7 +206,7 @@ def setup_scheduler():
         name="Weekly Report Task",
         replace_existing=True,
     )
-    
+
     logger.info("⏰ Scheduler configured with scheduled tasks:")
     logger.info("   - TEST Notification: Every 20 seconds ⚠️ (FOR TESTING)")
     logger.info("   - Daily Cleanup: Every day at 2:00 AM")
@@ -221,4 +226,3 @@ def shutdown_scheduler():
     if scheduler.running:
         scheduler.shutdown()
         logger.info("🛑 Scheduler stopped")
-

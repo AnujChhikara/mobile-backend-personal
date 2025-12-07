@@ -177,6 +177,59 @@ DB_MODE=atlas
 
 Then restart the server.
 
+## Development
+
+### Code Quality with Ruff
+
+This project uses [Ruff](https://github.com/astral-sh/ruff) for linting and formatting.
+
+#### Install Development Dependencies
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+#### Lint Code
+
+```bash
+# Check for linting issues
+ruff check .
+
+# Auto-fix linting issues
+ruff check --fix .
+```
+
+#### Format Code
+
+```bash
+# Check formatting
+ruff format --check .
+
+# Format code
+ruff format .
+```
+
+#### Run Both (Lint + Format)
+
+```bash
+# Check everything
+ruff check . && ruff format --check .
+
+# Fix everything
+ruff check --fix . && ruff format .
+```
+
+#### Pre-commit (Optional)
+
+You can add Ruff to your git workflow:
+
+```bash
+# Before committing, run:
+ruff check --fix . && ruff format .
+```
+
+Or set up a pre-commit hook (see `.git/hooks/pre-commit`).
+
 ## Docker Commands
 
 ```bash
