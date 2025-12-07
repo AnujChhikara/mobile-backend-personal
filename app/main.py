@@ -4,10 +4,19 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
 import os
+import logging
 
 from app.database import connect_to_database, close_database_connection
 from app.routers import health, expo_tokens, notifications
 from app.config import get_settings
+from app.scheduler import setup_scheduler, start_scheduler, shutdown_scheduler
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 # Get the directory where static files are located
 STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
@@ -23,9 +32,19 @@ async def lifespan(app: FastAPI):
     
     await connect_to_database()
     
+    # Setup and start scheduler if enabled
+    if settings.run_cron:
+        print("⏰ Scheduler enabled - starting scheduled tasks...")
+        setup_scheduler()
+        start_scheduler()
+    else:
+        print("⏸️  Scheduler disabled (RUN_CRON=false)")
+    
     yield
     
     # Shutdown
+    if settings.run_cron:
+        shutdown_scheduler()
     await close_database_connection()
     print("👋 Expo Token Backend shutdown complete")
 

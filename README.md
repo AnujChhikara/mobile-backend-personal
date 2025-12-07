@@ -59,6 +59,10 @@ MONGO_ATLAS_URI=mongodb+srv://username:password@cluster.mongodb.net/
 
 # Database Name
 DATABASE_NAME=expo_tokens_db
+
+# Scheduler/Cron Settings
+# Set to "true" to enable scheduled tasks, "false" to disable
+RUN_CRON=true
 ```
 
 ### 3. Choose Your Database Option

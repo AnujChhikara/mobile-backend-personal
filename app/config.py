@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     # Database Name
     database_name: str = "expo_tokens_db"
     
+    # Scheduler/Cron Settings
+    run_cron: bool = True  # Set to False to disable scheduled tasks
+    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
