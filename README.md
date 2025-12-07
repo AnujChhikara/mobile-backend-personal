@@ -210,7 +210,7 @@ The backend includes an AI-powered chat interface using MCP (Model Context Proto
    ```env
    # Google Gemini API Key
    GOOGLE_API_KEY=your-gemini-key-here
-   
+
    # Optional: Choose Gemini model (default: gemini-1.5-flash)
    AI_MODEL=gemini-1.5-flash
    ```
@@ -440,9 +440,9 @@ if (data.requires_confirmation) {
 
 ### Troubleshooting
 
-**Issue**: "OpenAI API key not configured"
+**Issue**: "GOOGLE_API_KEY not set in environment"
 
-- **Solution**: Set `OPENAI_API_KEY` in `.env` (or corresponding key for your provider)
+- **Solution**: Set `GOOGLE_API_KEY` in `.env` with your Gemini API key
 
 **Issue**: "Rate limit exceeded"
 
