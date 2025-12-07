@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.database import close_database_connection, connect_to_database
-from app.routers import expo_tokens, health, notifications
+from app.routers import ai, expo_tokens, health, notifications
 from app.scheduler import setup_scheduler, shutdown_scheduler, start_scheduler
 
 # Configure logging
@@ -72,6 +72,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(expo_tokens.router, prefix="/api")
 app.include_router(notifications.router, prefix="/api")
+app.include_router(ai.router, prefix="/api")
 
 # Mount static files
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")

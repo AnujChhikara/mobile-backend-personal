@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic_settings import BaseSettings
 
@@ -24,6 +24,16 @@ class Settings(BaseSettings):
 
     # Scheduler/Cron Settings
     run_cron: bool = True  # Set to False to disable scheduled tasks
+
+    # AI Provider Settings (Gemini only)
+    google_api_key: Optional[str] = None  # For Gemini
+    ai_model: str = "gemini-1.5-flash"  # Default Gemini model
+
+    # Backend API Settings
+    backend_url: str = "https://staging-api.realdevsquad.com"
+
+    # Rate Limiting
+    rate_limit: int = 20  # API calls per day per user
 
     class Config:
         env_file = ".env"

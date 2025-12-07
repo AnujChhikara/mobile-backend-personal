@@ -29,9 +29,33 @@ async def connect_to_database():
         await db.client.admin.command("ping")
         print(f"✅ Successfully connected to MongoDB ({settings.db_mode})")
         print(f"📁 Database: {settings.database_name}")
+        
+        # Create indexes for new collections
+        await create_indexes()
     except Exception as e:
         print(f"❌ Failed to connect to MongoDB: {e}")
         raise e
+
+
+async def create_indexes():
+    """Create database indexes for performance."""
+    try:
+        # Conversations collection indexes
+        conversations_collection = get_conversations_collection()
+        await conversations_collection.create_index("user_id")
+        await conversations_collection.create_index("session_id", unique=True)
+        await conversations_collection.create_index("expires_at")
+        await conversations_collection.create_index([("user_id", 1), ("created_at", -1)])
+        
+        # Rate limits collection indexes
+        rate_limits_collection = get_rate_limits_collection()
+        await rate_limits_collection.create_index([("user_id", 1), ("date", 1)], unique=True)
+        await rate_limits_collection.create_index("date")
+        
+        print("✅ Database indexes created successfully")
+    except Exception as e:
+        print(f"⚠️  Warning: Failed to create indexes: {e}")
+        # Don't fail startup if indexes fail
 
 
 async def close_database_connection():
@@ -51,3 +75,13 @@ def get_database() -> AsyncIOMotorDatabase:
 def get_expo_tokens_collection():
     """Get the expo_tokens collection."""
     return get_database()["expo_tokens"]
+
+
+def get_conversations_collection():
+    """Get the conversations collection."""
+    return get_database()["conversations"]
+
+
+def get_rate_limits_collection():
+    """Get the rate_limits collection."""
+    return get_database()["rate_limits"]
