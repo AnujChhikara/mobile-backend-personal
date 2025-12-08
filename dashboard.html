@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notification Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+          Arial, sans-serif;
+        background: #f5f5f5;
+        color: #1a1a1a;
+        min-height: 100vh;
+        padding: 0;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .header {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .header h1 {
+        color: #000000;
+        font-size: 2.25em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .header p {
+        color: #666666;
+        font-size: 1em;
+        font-weight: 400;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        padding: 40px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .card h2 {
+        color: #000000;
+        margin-bottom: 30px;
+        font-size: 1.5em;
+        font-weight: 600;
+        border-bottom: 2px solid #000000;
+        padding-bottom: 12px;
+        letter-spacing: -0.3px;
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #1a1a1a;
+        font-weight: 500;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #d0d0d0;
+        background: #ffffff;
+        border-radius: 4px;
+        font-size: 1em;
+        font-family: inherit;
+        color: #1a1a1a;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #000000;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+      }
+
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: #999999;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+        font-family: inherit;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .btn {
+        background: #000000;
+        color: #ffffff;
+        border: 2px solid #000000;
+        padding: 14px 32px;
+        border-radius: 4px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9em;
+      }
+
+      .btn:hover {
+        background: #1a1a1a;
+        border-color: #1a1a1a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn:disabled {
+        background: #666666;
+        border-color: #666666;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .default-notifications {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .default-btn {
+        background: #ffffff;
+        border: 1px solid #d0d0d0;
+        padding: 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+      }
+
+      .default-btn:hover {
+        background: #000000;
+        color: #ffffff;
+        border-color: #000000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .default-btn h3 {
+        font-size: 0.95em;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: inherit;
+      }
+
+      .default-btn p {
+        font-size: 0.85em;
+        opacity: 0.8;
+        color: inherit;
+        line-height: 1.5;
+      }
+
+      .alert {
+        padding: 16px 20px;
+        border-radius: 4px;
+        margin-bottom: 24px;
+        display: none;
+        border: 1px solid;
+        font-weight: 500;
+      }
+
+      .alert-success {
+        background: #f0f0f0;
+        color: #000000;
+        border-color: #000000;
+      }
+
+      .alert-error {
+        background: #ffffff;
+        color: #000000;
+        border-color: #d0d0d0;
+      }
+
+      .alert.show {
+        display: block;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 40px 20px;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 24px;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .spinner {
+        border: 3px solid #f0f0f0;
+        border-top: 3px solid #000000;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 16px;
+      }
+
+      .loading p {
+        color: #666666;
+        font-weight: 500;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .section-description {
+        color: #666666;
+        margin-bottom: 24px;
+        font-size: 0.95em;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 968px) {
+        .dashboard {
+          grid-template-columns: 1fr;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .default-notifications {
+          grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 20px 15px;
+        }
+
+        .header {
+          padding: 30px 24px;
+        }
+
+        .card {
+          padding: 30px 24px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .header h1 {
+          font-size: 1.75em;
+        }
+
+        .card h2 {
+          font-size: 1.25em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Notification Dashboard</h1>
+        <p>Send push notifications to your Expo app users</p>
+      </div>
+
+      <div id="alert" class="alert"></div>
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Sending notification...</p>
+      </div>
+
+      <div class="dashboard">
+        <div class="card">
+          <h2>Send Custom Notification</h2>
+          <form id="notificationForm">
+            <div class="form-group">
+              <label for="recipient">Recipient</label>
+              <select id="recipient" name="recipient">
+                <option value="all">All Users</option>
+                <option value="user">Specific User ID</option>
+                <option value="token">Specific Expo Token</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="userIdGroup" style="display: none">
+              <label for="user_id">User ID</label>
+              <input type="text" id="user_id" name="user_id" placeholder="Enter user ID" />
+            </div>
+
+            <div class="form-group" id="tokenGroup" style="display: none">
+              <label for="expo_token">Expo Token</label>
+              <input
+                type="text"
+                id="expo_token"
+                name="expo_token"
+                placeholder="ExponentPushToken[...]"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" id="title" name="title" required placeholder="Notification title" />
+            </div>
+
+            <div class="form-group">
+              <label for="body">Message</label>
+              <textarea
+                id="body"
+                name="body"
+                required
+                placeholder="Notification message"
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority">
+                  <option value="default">Default</option>
+                  <option value="normal">Normal</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="badge">Badge Count</label>
+                <input type="number" id="badge" name="badge" min="0" placeholder="Optional" />
+              </div>
+            </div>
+
+            <button type="submit" class="btn">Send Notification</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Quick Send</h2>
+          <p class="section-description">
+            Click on a template below to quickly send a notification to all users:
+          </p>
+          <div class="default-notifications" id="defaultNotifications"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const defaultNotifications = [
+        {
+          title: "Welcome",
+          body: "Thanks for joining us! We're excited to have you here.",
+        },
+        {
+          title: "New Update Available",
+          body: "Check out the latest features and improvements in the new update!",
+        },
+        {
+          title: "Reminder",
+          body: "Don't forget to complete your daily tasks!",
+        },
+        {
+          title: "Congratulations",
+          body: "You've achieved a new milestone. Keep up the great work!",
+        },
+        {
+          title: "Important Announcement",
+          body: "We have an important update regarding our services. Please check it out.",
+        },
+        {
+          title: "Daily Tip",
+          body: "Here's your daily tip to help you get the most out of our app!",
+        },
+        {
+          title: "Weekly Summary",
+          body: "Check out your weekly activity summary and see your progress!",
+        },
+        {
+          title: "Special Offer",
+          body: "We have a special offer just for you! Don't miss out.",
+        },
+      ];
+
+      const recipientSelect = document.getElementById("recipient");
+      const userIdGroup = document.getElementById("userIdGroup");
+      const tokenGroup = document.getElementById("tokenGroup");
+      const notificationForm = document.getElementById("notificationForm");
+      const alertDiv = document.getElementById("alert");
+      const loadingDiv = document.getElementById("loading");
+      const defaultNotificationsDiv = document.getElementById("defaultNotifications");
+
+      // Show/hide recipient fields
+      recipientSelect.addEventListener("change", (e) => {
+        const value = e.target.value;
+        userIdGroup.style.display = value === "user" ? "block" : "none";
+        tokenGroup.style.display = value === "token" ? "block" : "none";
+      });
+
+      // Render default notifications
+      defaultNotifications.forEach((notification) => {
+        const btn = document.createElement("div");
+        btn.className = "default-btn";
+        btn.innerHTML = `
+          <h3>${notification.title}</h3>
+          <p>${notification.body}</p>
+        `;
+        btn.addEventListener("click", () => {
+          sendNotification(notification);
+        });
+        defaultNotificationsDiv.appendChild(btn);
+      });
+
+      // Handle form submission
+      notificationForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const recipient = formData.get("recipient");
+        const title = formData.get("title");
+        const body = formData.get("body");
+        const priority = formData.get("priority");
+        const badge = formData.get("badge");
+
+        const payload = {
+          title,
+          body,
+          priority: priority || "default",
+        };
+
+        if (badge) {
+          payload.badge = parseInt(badge);
+        }
+
+        if (recipient === "user") {
+          const userId = formData.get("user_id");
+          if (!userId) {
+            showAlert("Please enter a user ID", "error");
+            return;
+          }
+          payload.user_id = userId;
+        } else if (recipient === "token") {
+          const expoToken = formData.get("expo_token");
+          if (!expoToken) {
+            showAlert("Please enter an Expo token", "error");
+            return;
+          }
+          payload.expo_token = expoToken;
+        }
+
+        await sendNotification(payload);
+        e.target.reset();
+        userIdGroup.style.display = "none";
+        tokenGroup.style.display = "none";
+      });
+
+      async function sendNotification(payload) {
+        loadingDiv.classList.add("show");
+        hideAlert();
+
+        try {
+          const response = await fetch("/api/notifications/send", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            showAlert(`Success! Sent ${data.sentCount} notification(s)`, "success");
+          } else {
+            showAlert(data.error || "Failed to send notification", "error");
+          }
+        } catch (error) {
+          showAlert("Error: " + error.message, "error");
+        } finally {
+          loadingDiv.classList.remove("show");
+        }
+      }
+
+      function showAlert(message, type) {
+        alertDiv.textContent = message;
+        alertDiv.className = `alert alert-${type} show`;
+        setTimeout(hideAlert, 5000);
+      }
+
+      function hideAlert() {
+        alertDiv.classList.remove("show");
+      }
+    </script>
+  </body>
+</html>
