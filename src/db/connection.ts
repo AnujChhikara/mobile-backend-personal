@@ -32,9 +32,7 @@ export async function connectToDatabase(): Promise<Db> {
     client = new MongoClient(connectionUri);
     await client.connect();
     db = client.db(databaseName);
-    console.log(
-      `Connected to MongoDB (${dbMode} mode) - Database: ${databaseName}`
-    );
+    console.log(`Connected to MongoDB (${dbMode} mode) - Database: ${databaseName}`);
     return db;
   } catch (error) {
     console.error("Failed to connect to MongoDB:", error);

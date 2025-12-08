@@ -1,4 +1,4 @@
-import { Db, Collection, ObjectId } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { getDatabase } from "../db/connection";
 
 export interface ExpoToken {

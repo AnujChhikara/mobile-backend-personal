@@ -1,7 +1,4 @@
-import {
-  connectToDatabase,
-  closeDatabaseConnection,
-} from "./src/db/connection";
+import { connectToDatabase, closeDatabaseConnection } from "./src/db/connection";
 import { expoTokensRoutes } from "./src/routes/expoTokens";
 
 await connectToDatabase();
@@ -16,12 +13,9 @@ const server = Bun.serve({
     const method = req.method;
 
     if (method === "GET" && pathname === "/health") {
-      return new Response(
-        JSON.stringify({ status: "ok", timestamp: new Date().toISOString() }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ status: "ok", timestamp: new Date().toISOString() }), {
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     for (const [route, handler] of Object.entries(expoTokensRoutes)) {
@@ -37,13 +31,10 @@ const server = Bun.serve({
           return await handler(req, {});
         } catch (error) {
           console.error("Error handling request:", error);
-          return new Response(
-            JSON.stringify({ error: "Internal server error" }),
-            {
-              status: 500,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
+          return new Response(JSON.stringify({ error: "Internal server error" }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
         }
       }
 
@@ -67,13 +58,10 @@ const server = Bun.serve({
           return await handler(req, params);
         } catch (error) {
           console.error("Error handling request:", error);
-          return new Response(
-            JSON.stringify({ error: "Internal server error" }),
-            {
-              status: 500,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
+          return new Response(JSON.stringify({ error: "Internal server error" }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
         }
       }
     }
@@ -85,16 +73,19 @@ const server = Bun.serve({
   },
 });
 
-console.log(`Server listening on ${server.url}`);
+const serverUrl = server.url.toString();
+console.log(`Server listening on ${serverUrl}`);
 
-process.on("SIGINT", async () => {
+process.on("SIGINT", () => {
   console.log("\nShutting down server...");
-  await closeDatabaseConnection();
-  process.exit(0);
+  void closeDatabaseConnection().then(() => {
+    process.exit(0);
+  });
 });
 
-process.on("SIGTERM", async () => {
+process.on("SIGTERM", () => {
   console.log("\nShutting down server...");
-  await closeDatabaseConnection();
-  process.exit(0);
+  void closeDatabaseConnection().then(() => {
+    process.exit(0);
+  });
 });

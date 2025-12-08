@@ -4,15 +4,20 @@ import { ObjectId } from "mongodb";
 
 type RouteParams = Record<string, string>;
 
-async function parseJsonBody(request: Request): Promise<any> {
+interface RequestBody {
+  user_id?: string;
+  expo_token?: string;
+}
+
+async function parseJsonBody(request: Request): Promise<RequestBody | null> {
   try {
-    return await request.json();
+    return (await request.json()) as RequestBody;
   } catch {
     return null;
   }
 }
 
-function jsonResponse(data: any, status: number = 200): Response {
+function jsonResponse(data: unknown, status: number = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
     headers: { "Content-Type": "application/json" },
@@ -26,7 +31,7 @@ function errorResponse(message: string, status: number = 400): Response {
 type RouteHandler = (req: Request, params: RouteParams) => Promise<Response>;
 
 export const expoTokensRoutes: Record<string, RouteHandler> = {
-  "POST /api/expo-tokens": async (req: Request, params: RouteParams) => {
+  "POST /api/expo-tokens": async (req: Request, _params: RouteParams) => {
     const body = await parseJsonBody(req);
     if (!body || !body.user_id || !body.expo_token) {
       return errorResponse("user_id and expo_token are required", 400);
@@ -52,7 +57,7 @@ export const expoTokensRoutes: Record<string, RouteHandler> = {
     return jsonResponse(result, 201);
   },
 
-  "GET /api/expo-tokens": async (req: Request, params: RouteParams) => {
+  "GET /api/expo-tokens": async (_req: Request, _params: RouteParams) => {
     const collection = getExpoTokensCollection();
     const tokens = await collection.find({}).toArray();
     return jsonResponse(tokens);
@@ -77,10 +82,7 @@ export const expoTokensRoutes: Record<string, RouteHandler> = {
     return jsonResponse(token);
   },
 
-  "GET /api/expo-tokens/user/:user_id": async (
-    req: Request,
-    params: RouteParams
-  ) => {
+  "GET /api/expo-tokens/user/:user_id": async (req: Request, params: RouteParams) => {
     const user_id = params.user_id;
     if (!user_id) {
       return errorResponse("user_id parameter is required", 400);
@@ -106,10 +108,7 @@ export const expoTokensRoutes: Record<string, RouteHandler> = {
 
     const body = await parseJsonBody(req);
     if (!body || (!body.expo_token && !body.user_id)) {
-      return errorResponse(
-        "At least one field (expo_token or user_id) is required",
-        400
-      );
+      return errorResponse("At least one field (expo_token or user_id) is required", 400);
     }
 
     const collection = getExpoTokensCollection();
@@ -117,8 +116,12 @@ export const expoTokensRoutes: Record<string, RouteHandler> = {
       updated_at: new Date(),
     };
 
-    if (body.expo_token) updateData.expo_token = body.expo_token;
-    if (body.user_id) updateData.user_id = body.user_id;
+    if (body.expo_token) {
+      updateData.expo_token = body.expo_token;
+    }
+    if (body.user_id) {
+      updateData.user_id = body.user_id;
+    }
 
     const result = await collection.findOneAndUpdate(
       { _id: new ObjectId(id) },
@@ -156,10 +159,7 @@ export const expoTokensRoutes: Record<string, RouteHandler> = {
   },
 
   // DELETE /api/expo-tokens/user/:user_id - Delete expo token by user
-  "DELETE /api/expo-tokens/user/:user_id": async (
-    req: Request,
-    params: RouteParams
-  ) => {
+  "DELETE /api/expo-tokens/user/:user_id": async (req: Request, params: RouteParams) => {
     const user_id = params.user_id;
     if (!user_id) {
       return errorResponse("user_id parameter is required", 400);
