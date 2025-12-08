@@ -17,72 +17,115 @@
         background: #f5f5f5;
         color: #1a1a1a;
         min-height: 100vh;
-        padding: 0;
-        line-height: 1.6;
+        display: flex;
       }
 
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 40px 20px;
+      .sidebar {
+        width: 240px;
+        background: #ffffff;
+        border-right: 1px solid #e0e0e0;
+        padding: 24px 20px;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+      }
+
+      .sidebar-header {
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .sidebar-header h1 {
+        font-size: 1.25em;
+        font-weight: 600;
+        color: #000000;
+        margin-bottom: 4px;
+      }
+
+      .sidebar-header p {
+        font-size: 0.75em;
+        color: #666666;
+      }
+
+      .stat-item {
+        margin-bottom: 20px;
+        padding: 16px;
+        background: #f9f9f9;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+      }
+
+      .stat-label {
+        font-size: 0.75em;
+        color: #666666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+
+      .stat-value {
+        font-size: 1.75em;
+        font-weight: 600;
+        color: #000000;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 240px;
+        padding: 24px;
       }
 
       .header {
         background: #ffffff;
         border: 1px solid #e0e0e0;
-        padding: 40px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+        margin-bottom: 24px;
       }
 
-      .header h1 {
-        color: #000000;
-        font-size: 2.25em;
+      .header h2 {
+        font-size: 1.5em;
         font-weight: 600;
-        margin-bottom: 8px;
-        letter-spacing: -0.5px;
+        color: #000000;
+        margin-bottom: 4px;
       }
 
       .header p {
+        font-size: 0.9em;
         color: #666666;
-        font-size: 1em;
-        font-weight: 400;
       }
 
       .dashboard {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        margin-bottom: 30px;
+        gap: 24px;
       }
 
       .card {
         background: #ffffff;
         border: 1px solid #e0e0e0;
-        padding: 40px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 24px;
       }
 
-      .card h2 {
+      .card h3 {
         color: #000000;
-        margin-bottom: 30px;
-        font-size: 1.5em;
+        margin-bottom: 20px;
+        font-size: 1.1em;
         font-weight: 600;
         border-bottom: 2px solid #000000;
-        padding-bottom: 12px;
-        letter-spacing: -0.3px;
+        padding-bottom: 8px;
       }
 
       .form-group {
-        margin-bottom: 24px;
+        margin-bottom: 16px;
       }
 
       .form-group label {
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         color: #1a1a1a;
         font-weight: 500;
-        font-size: 0.9em;
+        font-size: 0.8em;
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
@@ -91,14 +134,14 @@
       .form-group textarea,
       .form-group select {
         width: 100%;
-        padding: 12px 16px;
+        padding: 10px 12px;
         border: 1px solid #d0d0d0;
         background: #ffffff;
         border-radius: 4px;
-        font-size: 1em;
+        font-size: 0.9em;
         font-family: inherit;
         color: #1a1a1a;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        transition: border-color 0.2s;
       }
 
       .form-group input:focus,
@@ -106,72 +149,105 @@
       .form-group select:focus {
         outline: none;
         border-color: #000000;
-        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-      }
-
-      .form-group input::placeholder,
-      .form-group textarea::placeholder {
-        color: #999999;
       }
 
       .form-group textarea {
         resize: vertical;
-        min-height: 120px;
+        min-height: 80px;
         font-family: inherit;
       }
 
       .form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 12px;
+      }
+
+      .preview-section {
+        margin-top: 16px;
+        padding: 16px;
+        background: #f9f9f9;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+      }
+
+      .preview-label {
+        font-size: 0.75em;
+        color: #666666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+      }
+
+      .notification-preview {
+        background: #ffffff;
+        border: 1px solid #d0d0d0;
+        border-radius: 8px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .notification-icon {
+        font-size: 1.2em;
+        line-height: 1;
+      }
+
+      .notification-content {
+        flex: 1;
+      }
+
+      .notification-title {
+        font-weight: 600;
+        font-size: 0.9em;
+        color: #000000;
+        margin-bottom: 4px;
+      }
+
+      .notification-body {
+        font-size: 0.85em;
+        color: #666666;
+        line-height: 1.4;
       }
 
       .btn {
         background: #000000;
         color: #ffffff;
         border: 2px solid #000000;
-        padding: 14px 32px;
+        padding: 10px 24px;
         border-radius: 4px;
-        font-size: 1em;
+        font-size: 0.85em;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
         width: 100%;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        font-size: 0.9em;
       }
 
       .btn:hover {
         background: #1a1a1a;
         border-color: #1a1a1a;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      }
-
-      .btn:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       .btn:disabled {
         background: #666666;
         border-color: #666666;
         cursor: not-allowed;
-        transform: none;
       }
 
       .default-notifications {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 16px;
-        margin-top: 24px;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
       }
 
       .default-btn {
         background: #ffffff;
         border: 1px solid #d0d0d0;
-        padding: 20px;
+        padding: 12px;
         border-radius: 4px;
         cursor: pointer;
         transition: all 0.2s;
@@ -182,57 +258,141 @@
         background: #000000;
         color: #ffffff;
         border-color: #000000;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       }
 
-      .default-btn h3 {
-        font-size: 0.95em;
-        margin-bottom: 6px;
+      .default-btn .emoji {
+        font-size: 0.9em;
+        margin-right: 4px;
+      }
+
+      .default-btn h4 {
+        font-size: 0.85em;
+        margin-bottom: 4px;
         font-weight: 600;
         color: inherit;
       }
 
       .default-btn p {
-        font-size: 0.85em;
+        font-size: 0.75em;
         opacity: 0.8;
         color: inherit;
-        line-height: 1.5;
+        line-height: 1.4;
       }
 
-      .alert {
-        padding: 16px 20px;
-        border-radius: 4px;
-        margin-bottom: 24px;
-        display: none;
-        border: 1px solid;
-        font-weight: 500;
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
       }
 
-      .alert-success {
-        background: #f0f0f0;
-        color: #000000;
-        border-color: #000000;
-      }
-
-      .alert-error {
+      .toast {
         background: #ffffff;
-        color: #000000;
-        border-color: #d0d0d0;
+        border: 1px solid #e0e0e0;
+        border-left: 4px solid #000000;
+        padding: 14px 18px;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        min-width: 300px;
+        max-width: 400px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        animation: slideIn 0.3s ease-out;
+        font-size: 0.85em;
       }
 
-      .alert.show {
-        display: block;
+      .toast-success {
+        border-left-color: #000000;
+        background: #f9f9f9;
+      }
+
+      .toast-error {
+        border-left-color: #d0d0d0;
+        background: #ffffff;
+      }
+
+      .toast-icon {
+        font-size: 1.2em;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+
+      .toast-content {
+        flex: 1;
+      }
+
+      .toast-title {
+        font-weight: 600;
+        color: #000000;
+        margin-bottom: 4px;
+        font-size: 0.9em;
+      }
+
+      .toast-message {
+        color: #666666;
+        line-height: 1.4;
+        font-size: 0.85em;
+      }
+
+      .toast-close {
+        background: none;
+        border: none;
+        color: #999999;
+        cursor: pointer;
+        font-size: 1.2em;
+        line-height: 1;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: color 0.2s;
+      }
+
+      .toast-close:hover {
+        color: #000000;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+
+      .toast.hiding {
+        animation: slideOut 0.3s ease-out forwards;
       }
 
       .loading {
         display: none;
         text-align: center;
-        padding: 40px 20px;
+        padding: 24px;
         background: #ffffff;
         border: 1px solid #e0e0e0;
         border-radius: 4px;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
       }
 
       .loading.show {
@@ -240,18 +400,19 @@
       }
 
       .spinner {
-        border: 3px solid #f0f0f0;
-        border-top: 3px solid #000000;
+        border: 2px solid #f0f0f0;
+        border-top: 2px solid #000000;
         border-radius: 50%;
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         animation: spin 0.8s linear infinite;
-        margin: 0 auto 16px;
+        margin: 0 auto 12px;
       }
 
       .loading p {
         color: #666666;
         font-weight: 500;
+        font-size: 0.85em;
       }
 
       @keyframes spin {
@@ -263,14 +424,15 @@
         }
       }
 
-      .section-description {
-        color: #666666;
-        margin-bottom: 24px;
-        font-size: 0.95em;
-        line-height: 1.6;
-      }
-
       @media (max-width: 968px) {
+        .sidebar {
+          width: 200px;
+        }
+
+        .main-content {
+          margin-left: 200px;
+        }
+
         .dashboard {
           grid-template-columns: 1fr;
         }
@@ -282,39 +444,63 @@
         .default-notifications {
           grid-template-columns: 1fr;
         }
-
-        .container {
-          padding: 20px 15px;
-        }
-
-        .header {
-          padding: 30px 24px;
-        }
-
-        .card {
-          padding: 30px 24px;
-        }
       }
 
-      @media (max-width: 640px) {
-        .header h1 {
-          font-size: 1.75em;
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
         }
 
-        .card h2 {
-          font-size: 1.25em;
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          border-right: none;
+          border-bottom: 1px solid #e0e0e0;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .sidebar-header {
+          margin-bottom: 20px;
+        }
+
+        .stat-item {
+          display: inline-block;
+          width: calc(50% - 10px);
+          margin-right: 10px;
+          margin-bottom: 10px;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <h1>Notification Dashboard</h1>
-        <p>Send push notifications to your Expo app users</p>
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h1>Dashboard</h1>
+        <p>Notification Center</p>
       </div>
 
-      <div id="alert" class="alert"></div>
+      <div class="stat-item">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-value" id="totalUsers">0</div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-label">Notifications Sent</div>
+        <div class="stat-value" id="notificationsSent">0</div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <h2>Send Notification</h2>
+        <p>Create and send push notifications to your users</p>
+      </div>
+
+      <div id="toastContainer" class="toast-container"></div>
       <div id="loading" class="loading">
         <div class="spinner"></div>
         <p>Sending notification...</p>
@@ -322,7 +508,7 @@
 
       <div class="dashboard">
         <div class="card">
-          <h2>Send Custom Notification</h2>
+          <h3>Custom Notification</h3>
           <form id="notificationForm">
             <div class="form-group">
               <label for="recipient">Recipient</label>
@@ -350,7 +536,14 @@
 
             <div class="form-group">
               <label for="title">Title</label>
-              <input type="text" id="title" name="title" required placeholder="Notification title" />
+              <input
+                type="text"
+                id="title"
+                name="title"
+                required
+                placeholder="Notification title"
+                oninput="updatePreview()"
+              />
             </div>
 
             <div class="form-group">
@@ -360,6 +553,7 @@
                 name="body"
                 required
                 placeholder="Notification message"
+                oninput="updatePreview()"
               ></textarea>
             </div>
 
@@ -374,19 +568,30 @@
               </div>
 
               <div class="form-group">
-                <label for="badge">Badge Count</label>
+                <label for="badge">Badge</label>
                 <input type="number" id="badge" name="badge" min="0" placeholder="Optional" />
               </div>
             </div>
 
-            <button type="submit" class="btn">Send Notification</button>
+            <div class="preview-section">
+              <div class="preview-label">Preview</div>
+              <div class="notification-preview">
+                <div class="notification-icon">📱</div>
+                <div class="notification-content">
+                  <div class="notification-title" id="previewTitle">Notification Title</div>
+                  <div class="notification-body" id="previewBody">Notification message will appear here</div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn" style="margin-top: 16px">Send Notification</button>
           </form>
         </div>
 
         <div class="card">
-          <h2>Quick Send</h2>
-          <p class="section-description">
-            Click on a template below to quickly send a notification to all users:
+          <h3>Quick Send</h3>
+          <p style="color: #666666; font-size: 0.85em; margin-bottom: 16px">
+            Click a template to send instantly:
           </p>
           <div class="default-notifications" id="defaultNotifications"></div>
         </div>
@@ -394,62 +599,75 @@
     </div>
 
     <script>
+      let notificationsSentCount = parseInt(localStorage.getItem("notificationsSent") || "0");
+
       const defaultNotifications = [
+        { emoji: "👋", title: "Welcome", body: "Thanks for joining us! We're excited to have you here." },
         {
-          title: "Welcome",
-          body: "Thanks for joining us! We're excited to have you here.",
-        },
-        {
-          title: "New Update Available",
+          emoji: "🚀",
+          title: "New Update",
           body: "Check out the latest features and improvements in the new update!",
         },
+        { emoji: "⏰", title: "Reminder", body: "Don't forget to complete your daily tasks!" },
         {
-          title: "Reminder",
-          body: "Don't forget to complete your daily tasks!",
-        },
-        {
+          emoji: "🎉",
           title: "Congratulations",
           body: "You've achieved a new milestone. Keep up the great work!",
         },
         {
-          title: "Important Announcement",
+          emoji: "📢",
+          title: "Announcement",
           body: "We have an important update regarding our services. Please check it out.",
         },
         {
+          emoji: "💡",
           title: "Daily Tip",
           body: "Here's your daily tip to help you get the most out of our app!",
         },
         {
+          emoji: "📊",
           title: "Weekly Summary",
           body: "Check out your weekly activity summary and see your progress!",
         },
         {
+          emoji: "🎁",
           title: "Special Offer",
           body: "We have a special offer just for you! Don't miss out.",
         },
       ];
 
+
+      function updateNotificationsSent() {
+        document.getElementById("notificationsSent").textContent = notificationsSentCount;
+        localStorage.setItem("notificationsSent", notificationsSentCount.toString());
+      }
+
+      function updatePreview() {
+        const title = document.getElementById("title").value || "Notification Title";
+        const body = document.getElementById("body").value || "Notification message will appear here";
+        document.getElementById("previewTitle").textContent = title;
+        document.getElementById("previewBody").textContent = body;
+      }
+
       const recipientSelect = document.getElementById("recipient");
       const userIdGroup = document.getElementById("userIdGroup");
       const tokenGroup = document.getElementById("tokenGroup");
       const notificationForm = document.getElementById("notificationForm");
-      const alertDiv = document.getElementById("alert");
+      const toastContainer = document.getElementById("toastContainer");
       const loadingDiv = document.getElementById("loading");
       const defaultNotificationsDiv = document.getElementById("defaultNotifications");
 
-      // Show/hide recipient fields
       recipientSelect.addEventListener("change", (e) => {
         const value = e.target.value;
         userIdGroup.style.display = value === "user" ? "block" : "none";
         tokenGroup.style.display = value === "token" ? "block" : "none";
       });
 
-      // Render default notifications
       defaultNotifications.forEach((notification) => {
         const btn = document.createElement("div");
         btn.className = "default-btn";
         btn.innerHTML = `
-          <h3>${notification.title}</h3>
+          <h4><span class="emoji">${notification.emoji}</span>${notification.title}</h4>
           <p>${notification.body}</p>
         `;
         btn.addEventListener("click", () => {
@@ -458,7 +676,6 @@
         defaultNotificationsDiv.appendChild(btn);
       });
 
-      // Handle form submission
       notificationForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -482,14 +699,14 @@
         if (recipient === "user") {
           const userId = formData.get("user_id");
           if (!userId) {
-            showAlert("Please enter a user ID", "error");
+            showToast("Please enter a user ID", "error");
             return;
           }
           payload.user_id = userId;
         } else if (recipient === "token") {
           const expoToken = formData.get("expo_token");
           if (!expoToken) {
-            showAlert("Please enter an Expo token", "error");
+            showToast("Please enter an Expo token", "error");
             return;
           }
           payload.expo_token = expoToken;
@@ -497,13 +714,13 @@
 
         await sendNotification(payload);
         e.target.reset();
+        updatePreview();
         userIdGroup.style.display = "none";
         tokenGroup.style.display = "none";
       });
 
       async function sendNotification(payload) {
         loadingDiv.classList.add("show");
-        hideAlert();
 
         try {
           const response = await fetch("/api/notifications/send", {
@@ -517,26 +734,63 @@
           const data = await response.json();
 
           if (response.ok) {
-            showAlert(`Success! Sent ${data.sentCount} notification(s)`, "success");
+            notificationsSentCount += data.sentCount || 1;
+            updateNotificationsSent();
+            showToast(
+              `Success! Sent ${data.sentCount} notification(s)`,
+              "success"
+            );
           } else {
-            showAlert(data.error || "Failed to send notification", "error");
+            showToast(data.error || "Failed to send notification", "error");
           }
         } catch (error) {
-          showAlert("Error: " + error.message, "error");
+          showToast("Error: " + error.message, "error");
         } finally {
           loadingDiv.classList.remove("show");
         }
       }
 
-      function showAlert(message, type) {
-        alertDiv.textContent = message;
-        alertDiv.className = `alert alert-${type} show`;
-        setTimeout(hideAlert, 5000);
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+
+        const icon = type === "success" ? "✓" : "✕";
+        const title = type === "success" ? "Success" : "Error";
+
+        toast.innerHTML = `
+          <div class="toast-icon">${icon}</div>
+          <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+          </div>
+          <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+          toast.classList.add("hiding");
+          setTimeout(() => {
+            toast.remove();
+          }, 300);
+        }, 5000);
       }
 
-      function hideAlert() {
-        alertDiv.classList.remove("show");
+      async function loadStats() {
+        try {
+          const response = await fetch("/api/stats");
+          const data = await response.json();
+          if (data.totalUsers !== undefined) {
+            document.getElementById("totalUsers").textContent = data.totalUsers;
+          }
+        } catch (error) {
+          console.error("Error loading stats:", error);
+        }
       }
+
+      loadStats();
+      updateNotificationsSent();
+      updatePreview();
     </script>
   </body>
 </html>

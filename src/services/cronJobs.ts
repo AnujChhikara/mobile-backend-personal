@@ -10,8 +10,7 @@ export const cronTimeOptions = {
   everyThirtyMinutes: "*/30 * * * *",
   daily: "0 9 * * *",
   weekly: "0 9 * * 1",
-
-}
+};
 
 cron.schedule("0 9 * * *", async () => {
   console.log("Running daily reminder cron job...");
@@ -22,7 +21,6 @@ cron.schedule("0 9 * * *", async () => {
   });
   console.log("Daily reminder result:", result);
 });
-
 
 export function startCronJobs(): void {
   console.log("✅ Cron jobs started");

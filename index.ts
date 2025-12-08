@@ -1,6 +1,7 @@
 import { connectToDatabase, closeDatabaseConnection } from "./src/db/connection";
 import { expoTokensRoutes } from "./src/routes/expoTokens";
 import { notificationRoutes } from "./src/routes/notifications";
+import { statsRoutes } from "./src/routes/stats";
 import { startCronJobs, stopCronJobs } from "./src/services/cronJobs";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -34,6 +35,28 @@ const server = Bun.serve({
       } catch (error) {
         console.error("Error reading dashboard file:", error);
         return new Response("Dashboard not found", { status: 404 });
+      }
+    }
+
+    // Stats routes
+    for (const [route, handler] of Object.entries(statsRoutes)) {
+      const parts = route.split(" ");
+      if (parts.length !== 2) continue;
+
+      const [routeMethod, path] = parts;
+
+      if (method !== routeMethod || !path) continue;
+
+      if (path === pathname) {
+        try {
+          return await handler(req, {});
+        } catch (error) {
+          console.error("Error handling request:", error);
+          return new Response(JSON.stringify({ error: "Internal server error" }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
       }
     }
 
