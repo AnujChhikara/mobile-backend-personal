@@ -1,10 +1,12 @@
 import { connectToDatabase, closeDatabaseConnection } from "./src/db/connection";
 import { expoTokensRoutes } from "./src/routes/expoTokens";
 import { notificationRoutes } from "./src/routes/notifications";
+import { startCronJobs, stopCronJobs } from "./src/services/cronJobs";
 import { readFileSync } from "fs";
 import { join } from "path";
 
 await connectToDatabase();
+startCronJobs();
 
 const port = parseInt(process.env.PORT || "8000", 10);
 
@@ -144,6 +146,7 @@ console.log(`Server listening on ${serverUrl}`);
 
 process.on("SIGINT", () => {
   console.log("\nShutting down server...");
+  stopCronJobs();
   void closeDatabaseConnection().then(() => {
     process.exit(0);
   });
@@ -151,6 +154,7 @@ process.on("SIGINT", () => {
 
 process.on("SIGTERM", () => {
   console.log("\nShutting down server...");
+  stopCronJobs();
   void closeDatabaseConnection().then(() => {
     process.exit(0);
   });
